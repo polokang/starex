@@ -3,7 +3,6 @@
 
 __author__ = 'Hunter'
 
-
 class Parcel(object):
     def __init__(self, num, rec_name, rec_tel, rec_address):
         self.num = num
@@ -14,6 +13,8 @@ class Parcel(object):
 
     def print_parcel(self):
         print(self.num)
+
+
 
 if __name__ == '__main__':
     parcel = Parcel('121343', 'ag', '13', '安静')
