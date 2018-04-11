@@ -11,6 +11,7 @@ import CONST
 class WPS(object):
     def __init__(self, xls_path):
         self.xls_path = xls_path
+        self.dict_all = {}
 
     @property
     def read_xls(self):
@@ -22,6 +23,7 @@ class WPS(object):
         row = my_sheet.usedrange.rows.count
         # col = mySheet.usedrange.columns.count
         i = CONST.WPS_START_ROW
+        cnt = 1
         while i < row:
             num = my_sheet.Cells(i, CONST.WPS_NAME_ROW).Value
             name = my_sheet.Cells(i, CONST.WPS_NAME_ROW).Value
@@ -38,10 +40,13 @@ class WPS(object):
             else:
                 parcel = Parcel(num, name, tel, address)
                 parcels.append(parcel)
+                self.dict_all[cnt] = parcel
+                cnt += 1
             # names.append(str(my_sheet.Cells(i, 2).Value))
             i += 1
         return parcels
 
+    @property
     def filter_parcels(self, _parcel_list):
         name_list = {}
         for _parcel in _parcel_list:
@@ -54,8 +59,8 @@ class WPS(object):
 
 wps = WPS(r'C:\Users\Hunter\PycharmProjects\starex\快件核对_0421150005.xls')
 parcel_list = wps.read_xls
-wps.filter_parcels(parcel_list)
-
+# wps.filter_parcels(parcel_list)
+print(wps.dict_all)
 # filter_parcel()
 # for _parcel in parcel_list:
 #     print(':', _parcel.num)

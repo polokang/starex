@@ -40,7 +40,7 @@ class MyHTMLParser(HTMLParser):
 excel = win32com.client.Dispatch('Excel.Application')
 excel.Visible = -1
 myBook = excel.Workbooks.Open(r'C:\Users\Hunter\PycharmProjects\starex\2018.xls')
-mySheet = myBook.Worksheets("3")
+mySheet = myBook.Worksheets("4")
 row = mySheet.usedrange.rows.count
 col = mySheet.usedrange.columns.count
 i = 2
