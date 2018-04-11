@@ -61,6 +61,8 @@ wps = WPS(r'C:\Users\Hunter\PycharmProjects\starex\快件核对_0421150005.xls')
 parcel_list = wps.read_xls
 # wps.filter_parcels(parcel_list)
 print(wps.dict_all)
+
+
 # filter_parcel()
 # for _parcel in parcel_list:
 #     print(':', _parcel.num)
