@@ -47,20 +47,20 @@ class WPS(object):
         return parcels
 
     @property
-    def filter_parcels(self, _parcel_list):
+    def filter_parcels(self):
         name_list = {}
-        for _parcel in _parcel_list:
+        for _parcel in self.dict_all.values():
             if name_list.get(_parcel.rec_name) is None:
                 # print(_parcel.rec_name)
-                name_list[_parcel.rec_name] = _parcel.num
+                name_list[_parcel.rec_name] = _parcel.rec_name
             else:
                 print(_parcel.rec_name)
-        return True
+        print(name_list.__len__())
 
 wps = WPS(r'C:\Users\Hunter\PycharmProjects\starex\快件核对_0421150005.xls')
 parcel_list = wps.read_xls
-# wps.filter_parcels(parcel_list)
-print(wps.dict_all)
+wps.filter_parcels
+# print(wps.dict_all)
 
 
 # filter_parcel()
