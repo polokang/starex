@@ -4,7 +4,8 @@
 __author__ = 'Hunter'
 
 class Parcel(object):
-    def __init__(self, num, rec_name, rec_tel, rec_address):
+    def __init__(self, ser_id, num, rec_name, rec_tel, rec_address):
+        self.ser_id = ser_id
         self.num = num
         self.rec_name = rec_name
         self.rec_tel = rec_tel
@@ -17,5 +18,5 @@ class Parcel(object):
 
 
 if __name__ == '__main__':
-    parcel = Parcel('121343', 'ag', '13', '安静')
+    parcel = Parcel(1, '121343', 'ag', '13', '安静')
     parcel.print_parcel()
