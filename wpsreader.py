@@ -56,13 +56,13 @@ class WPS(object):
 
     # 根据姓名过滤
     def filter_name(self):
-        tep_namelist = {}  # 临时姓名字典 <姓名,包裹>
+        tmp_namelist = {}  # 临时姓名字典 <姓名,包裹>
         rep_namelist = {}  # 同名包裹字典 <姓名+tel，同名包裹id的list>
         for _parcel in self.dict_all.values():
-            pre_parcel = tep_namelist.get(_parcel.rec_name)  # 根据当前的包裹的姓名从临时tep_namelist字典里查找前一个同名的包裹
+            pre_parcel = tmp_namelist.get(_parcel.rec_name)  # 根据当前的包裹的姓名从临时tep_namelist字典里查找前一个同名的包裹
             if pre_parcel is None:  # 如果没有同名的包裹，则将当前的包裹放入临时的tep_namelist字典
                 # print(_parcel.rec_name)
-                tep_namelist[_parcel.rec_name] = _parcel
+                tmp_namelist[_parcel.rec_name] = _parcel
             else:  # 有同名的id ，则看手机是否相同：如果都相同，则先放入同名字典
                 if _parcel.rec_tel == pre_parcel.rec_tel:
                     tep_key = _parcel.rec_name+_parcel.rec_tel
