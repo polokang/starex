@@ -81,7 +81,19 @@ class WPS(object):
             elif address is None:
                 print(i, 'Error address.')
             else:
+                addrcode = str(my_sheet.Cells(i, CONST.WPS_ADDRESS_CODE_ROW).Value)
                 parcel = Parcel(cnt, num, name, tel, address)
+                parcel.set_customer( my_sheet.Cells(i, CONST.WPS_CUSTOMER_ROW).Value)
+                parcel.set_customer_code( my_sheet.Cells(i, CONST.WPS_CUSTOMER_CODE_ROW).Value)
+                parcel.set_rec_privince( my_sheet.Cells(i, CONST.WPS_REV_PRINCE_ROW).Value)
+                parcel.set_rec_city( my_sheet.Cells(i, CONST.WPS_REV_CITY_ROW).Value)
+                parcel.set_address_code(addrcode)
+                parcel.set_sender( my_sheet.Cells(i, CONST.WPS_SENDER_NAME_ROW).Value)
+                parcel.set_distination( my_sheet.Cells(i, CONST.WPS_DESTINATION_ROW).Value)
+                parcel.set_rev_email( my_sheet.Cells(i, CONST.WPS_REV_EMAIL_ROW).Value)
+                parcel.set_sender_tel( my_sheet.Cells(i, CONST.WPS_SENDER_TEL_ROW).Value)
+                parcel.set_state( my_sheet.Cells(i, CONST.WPS_STATE_ROW).Value)
+
                 parcel.set_date(date)
                 parcel.set_goods(goods)
                 parcel.set_weight(weight)
@@ -163,7 +175,35 @@ class WPS(object):
         curr_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
         save_name = save_path + '发货数据%s.xls' % curr_time
         save_book = self.excel.Workbooks.Add()
-        sheet = save_book.Worksheets("Sheet1")
+
+        save_book.Worksheets.Add().Name = '重复件'
+        rep_sheet = save_book.Worksheets('重复件')
+        cnt = 1
+        for no in self.repeat_list:
+            parcel = self.dict_all.get(no)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_CUSTOMER_ROW, parcel.ser_id)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_CUSTOMER_ROW+1, parcel.customer)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_CUSTOMER_CODE_ROW+1, parcel.customer_code)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_DATE_ROW+1, parcel.date)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_NUM_ROW+1, parcel.num)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_TRANS_CODE_ROW+1, parcel.num)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_NAME_ROW+1, parcel.rec_name)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_REV_PRINCE_ROW+1, parcel.rec_privince)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_REV_CITY_ROW+1, parcel.rec_city)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_ADDRESS_ROW+1, parcel.rec_address)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_ADDRESS_CODE_ROW+1, parcel.address_code.zfill(6))
+            self.set_cell(rep_sheet, cnt, CONST.WPS_TEL_ROW+1, parcel.rec_tel)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_WGT_ROW+1, parcel.weight)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_GOODS_ROW+1, parcel.goods)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_DESTINATION_ROW+1, parcel.distination)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_SENDER_NAME_ROW+1, parcel.sender)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_SENDER_TEL_ROW+1, parcel.sender_tel)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_REV_EMAIL_ROW+1, parcel.rev_email)
+            self.set_cell(rep_sheet, cnt, CONST.WPS_STATE_ROW+1, parcel.state)
+            cnt += 1
+
+        save_book.Worksheets.Add().Name = 'LIST'
+        sheet = save_book.Worksheets('LIST')
         # 设置TITLE
         col = 2
         for title in CONST.TITLE_LIST:
@@ -175,28 +215,31 @@ class WPS(object):
         for no in self.result_list:
             parcel = self.dict_all.get(no)
             self.set_cell(sheet, row, CONST.WPS_CUSTOMER_ROW, parcel.ser_id)
-            self.set_cell(sheet, row, CONST.WPS_CUSTOMER_ROW+1, parcel.ser_id)
-            self.set_cell(sheet, row, CONST.WPS_CUSTOMER_CODE_ROW+1, parcel.ser_id)
+            self.set_cell(sheet, row, CONST.WPS_CUSTOMER_ROW+1, parcel.customer)
+            self.set_cell(sheet, row, CONST.WPS_CUSTOMER_CODE_ROW+1, parcel.customer_code)
             self.set_cell(sheet, row, CONST.WPS_DATE_ROW+1, parcel.date)
             self.set_cell(sheet, row, CONST.WPS_NUM_ROW+1, parcel.num)
             self.set_cell(sheet, row, CONST.WPS_TRANS_CODE_ROW+1, parcel.num)
             self.set_cell(sheet, row, CONST.WPS_NAME_ROW+1, parcel.rec_name)
-            self.set_cell(sheet, row, CONST.WPS_REV_PRINCE_ROW+1, parcel.ser_id)
-            self.set_cell(sheet, row, CONST.WPS_REV_CITY_ROW+1, parcel.ser_id)
+            self.set_cell(sheet, row, CONST.WPS_REV_PRINCE_ROW+1, parcel.rec_privince)
+            self.set_cell(sheet, row, CONST.WPS_REV_CITY_ROW+1, parcel.rec_city)
             self.set_cell(sheet, row, CONST.WPS_ADDRESS_ROW+1, parcel.rec_address)
-            self.set_cell(sheet, row, CONST.WPS_ADDRESS_CODE_ROW+1, parcel.ser_id)
+            self.set_cell(sheet, row, CONST.WPS_ADDRESS_CODE_ROW+1, parcel.address_code)
             self.set_cell(sheet, row, CONST.WPS_TEL_ROW+1, parcel.rec_tel)
             self.set_cell(sheet, row, CONST.WPS_WGT_ROW+1, parcel.weight)
             self.set_cell(sheet, row, CONST.WPS_GOODS_ROW+1, parcel.goods)
-
+            self.set_cell(sheet, row, CONST.WPS_DESTINATION_ROW+1, parcel.distination)
+            self.set_cell(sheet, row, CONST.WPS_SENDER_NAME_ROW+1, parcel.sender)
+            self.set_cell(sheet, row, CONST.WPS_SENDER_TEL_ROW+1, parcel.sender_tel)
+            self.set_cell(sheet, row, CONST.WPS_REV_EMAIL_ROW+1, parcel.rev_email)
+            self.set_cell(sheet, row, CONST.WPS_STATE_ROW+1, parcel.state)
             row += 1
-
 
         save_book.SaveAs(save_name)
 
 
 path = r'C:\Users\Hunter\PycharmProjects\starex\\'
-file_name = '快件核对_0417131011.xls'
+file_name = '快件核对_0507112211.xls'
 
 wps = WPS(path + file_name)
 parcel_list = wps.read_xls()

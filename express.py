@@ -13,6 +13,45 @@ class Parcel(object):
         if rec_address is not None:
             self.rec_address = rec_address.replace('\u2212', '-')
 
+    def set_customer(self, customer):
+        self.customer = customer
+
+    def set_customer_code(self, customer_code):
+        self.customer_code = customer_code
+
+    def set_rec_privince(self, rec_privince):
+        self.rec_privince = rec_privince
+
+    def set_rec_city(self, rec_city):
+        self.rec_city = rec_city
+
+    def set_address_code(self, address_code):
+        self.address_code = address_code
+
+    def set_address_code(self, address_code):
+        self.address_code = address_code
+
+    def set_distination(self, distination):
+        self.distination = distination
+
+    def set_sender(self, sender):
+        self.sender = sender
+
+    def set_sender_tel(self, sender_tel):
+        self.sender_tel = sender_tel
+
+    def set_rev_email(self, rev_email):
+        self.rev_email = rev_email
+
+    def set_remark1(self, remark1):
+        self.remark1 = remark1
+
+    def set_remark2(self, remark2):
+        self.remark2 = remark2
+
+    def set_state(self, state):
+        self.state = state
+
     def set_date(self, date):
         self.date = date
 
