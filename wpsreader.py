@@ -4,6 +4,7 @@
 __author__ = 'Hunter'
 
 import time
+import datetime
 import win32com.client
 from express import Parcel
 import CONST
@@ -81,13 +82,12 @@ class WPS(object):
             elif address is None:
                 print(i, 'Error address.')
             else:
-                addrcode = str(my_sheet.Cells(i, CONST.WPS_ADDRESS_CODE_ROW).Value)
                 parcel = Parcel(cnt, num, name, tel, address)
                 parcel.set_customer( my_sheet.Cells(i, CONST.WPS_CUSTOMER_ROW).Value)
                 parcel.set_customer_code( my_sheet.Cells(i, CONST.WPS_CUSTOMER_CODE_ROW).Value)
                 parcel.set_rec_privince( my_sheet.Cells(i, CONST.WPS_REV_PRINCE_ROW).Value)
                 parcel.set_rec_city( my_sheet.Cells(i, CONST.WPS_REV_CITY_ROW).Value)
-                parcel.set_address_code(addrcode)
+                parcel.set_address_code(my_sheet.Cells(i, CONST.WPS_ADDRESS_CODE_ROW).Value)
                 parcel.set_sender( my_sheet.Cells(i, CONST.WPS_SENDER_NAME_ROW).Value)
                 parcel.set_distination( my_sheet.Cells(i, CONST.WPS_DESTINATION_ROW).Value)
                 parcel.set_rev_email( my_sheet.Cells(i, CONST.WPS_REV_EMAIL_ROW).Value)
@@ -145,14 +145,17 @@ class WPS(object):
 
     def filter_address(self):
         tmp_address_list = {}  # 临时地址字典 <address,包裹>
+        print('self.result_list:',self.result_list.__len__())
         for cur_id in self.result_list:
             _parcel = self.dict_all.get(cur_id)
             cur_address = _parcel.rec_address
+            print(_parcel.ser_id,'cur_address:',cur_address)
             pre_parcel = tmp_address_list.get(cur_address)
             if pre_parcel is None:
                 tmp_address_list[cur_address] = _parcel
             else:
                 rep_id = select_repeat(pre_parcel, _parcel)
+
                 # 如果重复件在tmp_address_list 里面，则用新的替换掉
                 if rep_id == pre_parcel.ser_id:
                     tmp_address_list.pop(cur_address)
@@ -167,6 +170,13 @@ class WPS(object):
         sht.Cells(row, col).Name = "宋体"  # 字体类型
 
     def set_cell(self, sht, row, col, value):
+        if col > CONST.WPS_REV_EMAIL_ROW:
+            sht.Cells(row, col).Numberformat = '@'
+        elif col == CONST.WPS_ADDRESS_CODE_ROW+1:
+            sht.Cells(row, col).Numberformat = '@'
+        elif col == CONST.WPS_TEL_ROW+1:
+            sht.Cells(row, col).Numberformat = '@'
+
         sht.Cells(row, col).Value = value
         sht.Cells(row, col).Font.Size = 11  # 字体大小
         sht.Cells(row, col).Name = "宋体"  # 字体类型
@@ -186,20 +196,20 @@ class WPS(object):
             self.set_cell(rep_sheet, cnt, CONST.WPS_CUSTOMER_CODE_ROW+1, parcel.customer_code)
             self.set_cell(rep_sheet, cnt, CONST.WPS_DATE_ROW+1, parcel.date)
             self.set_cell(rep_sheet, cnt, CONST.WPS_NUM_ROW+1, parcel.num)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_TRANS_CODE_ROW+1, parcel.num)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_NAME_ROW+1, parcel.rec_name)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_REV_PRINCE_ROW+1, parcel.rec_privince)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_REV_CITY_ROW+1, parcel.rec_city)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_ADDRESS_ROW+1, parcel.rec_address)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_ADDRESS_CODE_ROW+1, parcel.address_code.zfill(6))
-            self.set_cell(rep_sheet, cnt, CONST.WPS_TEL_ROW+1, parcel.rec_tel)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_WGT_ROW+1, parcel.weight)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_GOODS_ROW+1, parcel.goods)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_DESTINATION_ROW+1, parcel.distination)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_SENDER_NAME_ROW+1, parcel.sender)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_SENDER_TEL_ROW+1, parcel.sender_tel)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_REV_EMAIL_ROW+1, parcel.rev_email)
-            self.set_cell(rep_sheet, cnt, CONST.WPS_STATE_ROW+1, parcel.state)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_TRANS_CODE_ROW+1, parcel.num)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_NAME_ROW+1, parcel.rec_name)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_REV_PRINCE_ROW+1, parcel.rec_privince)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_REV_CITY_ROW+1, parcel.rec_city)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_ADDRESS_ROW+1, parcel.rec_address)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_ADDRESS_CODE_ROW+1, parcel.address_code)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_TEL_ROW+1, parcel.rec_tel)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_WGT_ROW+1, parcel.weight)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_GOODS_ROW+1, parcel.goods)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_DESTINATION_ROW+1, parcel.distination)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_SENDER_NAME_ROW+1, parcel.sender)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_SENDER_TEL_ROW+1, parcel.sender_tel)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_REV_EMAIL_ROW+1, parcel.rev_email)
+            # self.set_cell(rep_sheet, cnt, CONST.WPS_STATE_ROW+1, parcel.state)
             cnt += 1
 
         save_book.Worksheets.Add().Name = 'LIST'
@@ -224,6 +234,7 @@ class WPS(object):
             self.set_cell(sheet, row, CONST.WPS_REV_PRINCE_ROW+1, parcel.rec_privince)
             self.set_cell(sheet, row, CONST.WPS_REV_CITY_ROW+1, parcel.rec_city)
             self.set_cell(sheet, row, CONST.WPS_ADDRESS_ROW+1, parcel.rec_address)
+
             self.set_cell(sheet, row, CONST.WPS_ADDRESS_CODE_ROW+1, parcel.address_code)
             self.set_cell(sheet, row, CONST.WPS_TEL_ROW+1, parcel.rec_tel)
             self.set_cell(sheet, row, CONST.WPS_WGT_ROW+1, parcel.weight)
@@ -238,9 +249,12 @@ class WPS(object):
         save_book.SaveAs(save_name)
 
 
-path = r'C:\Users\Hunter\PycharmProjects\starex\\'
-file_name = '快件核对_0507112211.xls'
+path = r'C:\Users\Hunter\PycharmProjects\testdata\\'
+file_name = '快件核对_0529114537.xls'
+# file_name = '快件核对.xls'
 
+start_time = datetime.datetime.now()
+print('starttime:',start_time)
 wps = WPS(path + file_name)
 parcel_list = wps.read_xls()
 wps.filter_name()
@@ -250,10 +264,18 @@ wps.filter_address()
 wps.result_list.sort()
 wps.repeat_list.sort()
 
-wps.save_file(path)
-
 print(wps.result_list.__len__(),'self.result_list', wps.result_list)
 print(wps.repeat_list.__len__(),'self.repeat_list', wps.repeat_list)
+
+# wps.save_file(path)
+
+end_time = datetime.datetime.now()
+print('endtime:',end_time)
+diff = end_time - start_time
+
+print(diff.seconds)
+
+
 
 
 
@@ -269,3 +291,6 @@ print(wps.repeat_list.__len__(),'self.repeat_list', wps.repeat_list)
 # xlSheet = xlApp.Worksheets('test')
 # xlSheet.Cells(1,1).Value = 'title'
 # xlSheet.Cells(2,1).Value = 123
+
+# range = sheet.Range(sheet.Cells(1, 1), sheet.Cells(100, 2) )
+# range.NumberFormat = '@'
