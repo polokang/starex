@@ -4,7 +4,7 @@ __author__ = 'Hunter'
 
 import win32com.client
 import mysql.connector
-conn = mysql.connector.connect(host='150.109.54.77', port='3306', user='starex', password='zhk393939', database='starex')
+conn = mysql.connector.connect(host='150.109.54.77', port='3306', user='starex', password='1111', database='starex')
 # conn = mysql.connector.connect(host='localhost', port='3306', user='root', password='123456', database='starex')
 
 cursor = conn.cursor()
